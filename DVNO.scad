@@ -1,5 +1,5 @@
 module black_bground(){
-    color([0,0,0]) cube(center=true, [1000,1000,1]);
+    color([0.1, 0.1, 0.1]) cube(center=true, [1000,1000,1]);
 }
 
 module gold_logo(t, layer){
@@ -34,7 +34,51 @@ module printed_in_gold(t){
     }
 }
 
+module printed_in_gold_scene(t){
+    for (i=[1:6])
+        gold_logo(t, layer=i);
+    printed_in_gold(t);
+}
+
+
+module ed_banger_scene(t){
+    T1=1.0; //aproximacao lenta
+    TR=0.7;
+    function logo_zoom(t) = t < (T1) ? (1-t/(T1))*1000 : 0;
+    function logo_opacity(t) = t < TR ? 1 : 1-((t-TR)/(1-TR));
+    color([0.8, 0.8, 0, logo_opacity(t)])
+    rotate(logo_rotation(t))
+    translate([0,0,logo_zoom(t)])
+        linear_extrude(height=3)
+        import("Ed Banger records.dxf");
+}
+
+
+module justice_scene(t){
+    T1=1.0; //aproximacao lenta
+    TR=0.7;
+    function logo_zoom(t) = t < (T1) ? (1-t/(T1))*1000 : 0;
+    function logo_opacity(t) = t < TR ? 1 : 1-((t-TR)/(1-TR));
+    color([0.8, 0.8, 0, logo_opacity(t)])
+    rotate(logo_rotation(t))
+    translate([0,0,logo_zoom(t)])
+        linear_extrude(height=3)
+        import("Justice.dxf");
+}
+
+
 black_bground();
-for (i=[1:6])
-    gold_logo($t, layer=i);
-printed_in_gold($t);
+TOTAL = 10;
+time = $t*TOTAL;
+
+function within_range(t, start, end) = t > start && t < end;
+function time_range(t, start, end) = (t-start)/(end-start);
+
+if(within_range(time, 0, 3))
+    ed_banger_scene(time_range(time, 0, 3));
+
+if(within_range(time, 3, 5))
+    justice_scene(time_range(time, 3, 5));
+
+if(within_range(time, 6, 10))
+    printed_in_gold_scene(time_range(time, 6, 10));
