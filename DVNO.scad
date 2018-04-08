@@ -66,9 +66,25 @@ module justice_scene(t){
         import("Justice.dxf");
 }
 
+module DVNO_intro_logo_scene(t){
+    T1=1; //aproximacao lenta
+    TR=0.7;
+    seed = 0;
+    x=rands(0,100,29,seed);
+    y=rands(0,100,29,seed);
+    function layer_zoom(part, t) = t < T1 ? (1-t/T1)*1000 : 0;
+    function logo_opacity(t) = t < TR ? 1 : 1-((t-TR)/(1-TR));
+    color([0.8, 0.8, 0, logo_opacity(t)])
+    for(part=[1:29])
+    translate([0,0, 40+layer_zoom(part, t)])
+        rotate([(1-t)*x[part],(1-t)*y[part]])
+        linear_extrude(height=3)
+        import("DVNO_intro_logo.dxf", layer=str("part-",part));
+}
+
 
 black_bground();
-TOTAL = 10;
+TOTAL = 15;
 time = $t*TOTAL;
 
 function within_range(t, start, end) = t > start && t < end;
@@ -80,5 +96,8 @@ if(within_range(time, 0, 3))
 if(within_range(time, 3, 5))
     justice_scene(time_range(time, 3, 5));
 
-if(within_range(time, 6, 10))
-    printed_in_gold_scene(time_range(time, 6, 10));
+if(within_range(time, 5, 10))
+    DVNO_intro_logo_scene(time_range(time, 5, 10));
+
+if(within_range(time, 10, 15))
+    printed_in_gold_scene(time_range(time, 10, 15));
