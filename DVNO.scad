@@ -2,6 +2,52 @@ module black_bground(){
     color([0.1, 0.1, 0.1]) cube(center=true, [1000,1000,1]);
 }
 
+module ed_banger_scene(t){
+    T1=1.0; //aproximacao lenta
+    TR=0.7;
+    function logo_zoom(t) = t < (T1) ? (1-t/(T1))*1000 : 0;
+    function logo_opacity(t) = t < TR ? 1 : 1-((t-TR)/(1-TR));
+    rotate(logo_rotation(t))
+    translate([0,0,logo_zoom(t)]){
+        color([0.8, 0.7, 0, logo_opacity(t)])
+        linear_extrude(height=20)
+        import("Ed Banger records.dxf", layer="Ed");
+
+        color([0.8, 0.2, 0, logo_opacity(t)])
+        linear_extrude(height=20)
+        import("Ed Banger records.dxf", layer="records");
+    }
+}
+
+
+module justice_scene(t){
+    T1=1.0; //aproximacao lenta
+    TR=0.7;
+    function logo_zoom(t) = t < (T1) ? (1-t/(T1))*1000 : 0;
+    function logo_opacity(t) = t < TR ? 1 : 1-((t-TR)/(1-TR));
+    color([0.8, 0.7, 0.3, logo_opacity(t)])
+    rotate(logo_rotation(t))
+    translate([0,0,logo_zoom(t)])
+        linear_extrude(height=5)
+        import("Justice.dxf");
+}
+
+module DVNO_intro_logo_scene(t){
+    T1=1.0; //aproximacao lenta
+    TR=0.7;
+    seed = 0;
+    x=rands(-300,300,29,seed);
+    y=rands(-300,300,29,seed);
+    function layer_zoom(part, t) = t < T1 ? (1-t/T1)*1000 : 0;
+    function logo_opacity(t) = t < TR ? 1 : 1-((t-TR)/(1-TR));
+    color([0.3, 0.2, 1, logo_opacity(t)])
+    for(part=[1:29])
+    translate([0,0, 40+layer_zoom(part, t)])
+        rotate([(0.7-t)*x[part],(0.7-t)*y[part]])
+        linear_extrude(height=6)
+        import("DVNO_intro_logo.dxf", layer=str("part-",part));
+}
+
 module gold_logo(t, layer){
     T1=0.05; //aproximacao rapida
     TR=0.7;
@@ -11,7 +57,7 @@ module gold_logo(t, layer){
     color([0.8, 0.8, 0, logo_opacity(t)])
     rotate(logo_rotation(t))
     translate([0,0,layer_zoom(layer, t)])
-        linear_extrude(height=3)
+        linear_extrude(height=20)
         import("Printed in gold.dxf", layer=str("layer-",layer));
 }
 
@@ -40,47 +86,6 @@ module printed_in_gold_scene(t){
     printed_in_gold(t);
 }
 
-
-module ed_banger_scene(t){
-    T1=1.0; //aproximacao lenta
-    TR=0.7;
-    function logo_zoom(t) = t < (T1) ? (1-t/(T1))*1000 : 0;
-    function logo_opacity(t) = t < TR ? 1 : 1-((t-TR)/(1-TR));
-    color([0.8, 0.8, 0, logo_opacity(t)])
-    rotate(logo_rotation(t))
-    translate([0,0,logo_zoom(t)])
-        linear_extrude(height=3)
-        import("Ed Banger records.dxf");
-}
-
-
-module justice_scene(t){
-    T1=1.0; //aproximacao lenta
-    TR=0.7;
-    function logo_zoom(t) = t < (T1) ? (1-t/(T1))*1000 : 0;
-    function logo_opacity(t) = t < TR ? 1 : 1-((t-TR)/(1-TR));
-    color([0.8, 0.8, 0, logo_opacity(t)])
-    rotate(logo_rotation(t))
-    translate([0,0,logo_zoom(t)])
-        linear_extrude(height=3)
-        import("Justice.dxf");
-}
-
-module DVNO_intro_logo_scene(t){
-    T1=1; //aproximacao lenta
-    TR=0.7;
-    seed = 0;
-    x=rands(0,100,29,seed);
-    y=rands(0,100,29,seed);
-    function layer_zoom(part, t) = t < T1 ? (1-t/T1)*1000 : 0;
-    function logo_opacity(t) = t < TR ? 1 : 1-((t-TR)/(1-TR));
-    color([0.8, 0.8, 0, logo_opacity(t)])
-    for(part=[1:29])
-    translate([0,0, 40+layer_zoom(part, t)])
-        rotate([(1-t)*x[part],(1-t)*y[part]])
-        linear_extrude(height=3)
-        import("DVNO_intro_logo.dxf", layer=str("part-",part));
-}
 
 
 black_bground();
