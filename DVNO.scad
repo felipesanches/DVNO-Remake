@@ -1,4 +1,12 @@
 module black_bground(){
+    translate([0,0,-100])
+    color([0.1, 0.1, 0.1]) cube(center=true, [1000,1000,1]);
+    
+    for(i=[-1,1])
+        for(j=[0,90])
+            rotate([0,0,j])
+    translate([i*500,0,0])
+    rotate([0,90])
     color([0.1, 0.1, 0.1]) cube(center=true, [1000,1000,1]);
 }
 
@@ -86,6 +94,42 @@ module printed_in_gold_scene(t){
     printed_in_gold(t);
 }
 
+module earth(){
+    color([0.1,0.4,0.8])
+    translate([0,0,-60])
+    sphere(r=41, $fn=80);
+}
+    
+module DVNO_globe_ending_scene(t){
+    earth();
+
+    color([0,1,1])
+    DVNO_with_cuts(t);
+
+    color([0,1,1,0.3])
+    translate([0,-22])
+    mirror([0,1,0])
+    DVNO_with_cuts(t);
+}
+
+module DVNO_with_cuts(t){
+    T1=1.0;
+    function layer_zoom(part, t) = t < T1 ? (1-t/T1)*1000 : 0;
+    render()
+    difference(){
+        linear_extrude(height=6)
+        difference(){
+            import("DVNO_globe_ending.dxf", layer="letters");
+            import("DVNO_globe_ending.dxf", layer="cuts");
+        }
+        
+        translate([0,-8,10])
+        scale([1,1,0.6])
+        rotate([0,90])
+        cylinder(r=14,h=100, center=true);
+    }
+}
+
 
 
 black_bground();
@@ -106,3 +150,6 @@ if(within_range(time, 5, 10))
 
 if(within_range(time, 10, 15))
     printed_in_gold_scene(time_range(time, 10, 15));
+
+//if(within_range(time, 0, 15))
+//    DVNO_globe_ending_scene(time_range(time, 0, 15));
