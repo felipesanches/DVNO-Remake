@@ -1,3 +1,14 @@
+/*
+This is a reimplementation of the DVNO videoclip (by Justice) using the OpenSCAD modeling language.
+Even the original video opyrights are owned by someone else, the code of this reimplementation is written by myself,
+Felipe Correa da Silva Sanches, and I make it available to the public domain, so anyone can do anything with it. Have fun!
+
+    Happy Hacking,
+    Felipe "Juca" Sanches
+    <juca@members.fsf.org>
+    April 14th, 2018
+*/
+
 BACKGROUND_COLOR = [0.1, 0.1, 0.1];
 
 module black_bground(){
