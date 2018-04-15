@@ -1,13 +1,19 @@
+BACKGROUND_COLOR = [0.1, 0.1, 0.1];
+
 module black_bground(){
     translate([0,0,-100])
-    color([0.1, 0.1, 0.1]) cube(center=true, [1000,1000,1]);
+    color(BACKGROUND_COLOR)
+    cube(center=true, [1000,1000,1]);
     
-    for(i=[-1,1])
-        for(j=[0,90])
+    for(i=[-1,1]){
+        for(j=[0,90]){
             rotate([0,0,j])
-    translate([i*500,0,0])
-    rotate([0,90])
-    color([0.1, 0.1, 0.1]) cube(center=true, [1000,1000,1]);
+            translate([i*500,0,0])
+            rotate([0,90])
+            color(BACKGROUND_COLOR)
+            cube(center=true, [1000,1000,1]);
+        }
+    }
 }
 
 module ed_banger_scene(t){
@@ -15,7 +21,6 @@ module ed_banger_scene(t){
     TR=0.7;
     function logo_zoom(t) = t < (T1) ? (1-t/(T1))*1000 : 0;
     function logo_opacity(t) = t < TR ? 1 : 1-((t-TR)/(1-TR));
-    rotate(logo_rotation(t))
     translate([0,0,logo_zoom(t)]){
         color([0.8, 0.7, 0, logo_opacity(t)])
         linear_extrude(height=20)
@@ -34,7 +39,6 @@ module justice_scene(t){
     function logo_zoom(t) = t < (T1) ? (1-t/(T1))*1000 : 0;
     function logo_opacity(t) = t < TR ? 1 : 1-((t-TR)/(1-TR));
     color([0.8, 0.7, 0.3, logo_opacity(t)])
-    rotate(logo_rotation(t))
     translate([0,0,logo_zoom(t)])
         linear_extrude(height=5)
         import("Justice.dxf");
@@ -118,7 +122,7 @@ module DVNO_with_cuts(t){
     render()
     difference(){
         linear_extrude(height=6)
-        difference(){
+        difference(){   
             import("DVNO_globe_ending.dxf", layer="letters");
             import("DVNO_globe_ending.dxf", layer="cuts");
         }
@@ -130,26 +134,133 @@ module DVNO_with_cuts(t){
     }
 }
 
+cores = [
+   [1.0, 1.0, 0.0], //amarelo
+   [0.5, 1.0, 0.0], //verde claro
+   [0.0, 1.0, 0.0], //verde
+   [0.0, 1.0, 0.6], //ciano-esverdeado
+   [0.0, 1.0, 1.0], //ciano
+   [0.0, 0.5, 1.0], //azul claro
+   [0.0, 0.0, 1.0], //azul
+   [1.0, 0.5, 0.8], //rosa
+   [1.0, 0.4, 0.8], //roxo
+   [1.0, 0.0, 0.3], //vermelho
+   [1.0, 0.0, 0.0], //vermelho
+   [1.0, 0.6, 0.0], //laranja
+   BACKGROUND_COLOR, //fundo
+];
+
+module story_telling_1_scene(t){
+    w=70;
+    h=100;
+    e=1;
+    function start(p) = (11-p)/60;
+    function end(p) = ((11-p)+1)/60;
+    function page_width(p, t) = t > end(p) ? 1 : (t < start(p) ? 0 : (t-start(p))/(end(p)-start(p)));
+    rotate([-90,0])
+    for (p = [0:11]){
+        color(cores[p])
+        rotate([0,p*-180/11])
+        translate([0,0,-e/2])
+        cube([w*page_width(p, $t),h,e]);
+    }
+}
+
+
+module story_telling_2_scene(t){
+    w=70;
+    h=100;
+    e=1;
+    rotate([-90+90*t,0])
+    for (p = [0:11]){
+        color(cores[p])
+        rotate([0,p*-180/11])
+        translate([0,0,-e/2])
+        cube([w,h,e]);
+    }
+}
+
+module story_telling_3_scene(t){
+    w=70;
+    h=100;
+    e=1;
+    for (p = [0:12]){
+        color(cores[(p+2*t*12)%12])
+        rotate([0,p*(-180/11)])
+        translate([0,0,-e/2])
+        cube([w,h,e]);
+    }
+
+    layers = [["S", [0, 200, 0]],
+              ["t", [-200, 0, 0]],
+              ["o", [200, 0, 0]],
+              [ "r", [0, 200, 0]],
+              ["y", [200, 0, 0]],
+              ["T", [-200, 0, 0]],
+              ["e", [0, -200, 0]],
+              ["l", [0, -200, 0]],
+              ["l2", [0, 200, 0]],
+              ["i", [200, 0, 0]],
+              ["n", [0, -200, 0]],
+              ["g", [200, 0, 0]],
+              ["text", [0, 200, 0]]];
+    color("brown")
+    for (l=[0:11]){
+        translate([1,50,120]+layers[l][1]*(1-t))
+        linear_extrude(height=3)
+        import("StoryTelling.dxf", layer=layers[l][0]);
+    }
+}
+
+module story_telling_4_scene(t){
+    w=70;
+    h=100;
+    e=1;
+    for (p = [0:12]){
+        color(cores[p==12 ? 12: (p+2*t*12)%12])
+        rotate([0,p*(-180/11)*(1-t)])
+        translate([0,0,-e/2])
+        cube([w,h,e]);
+    }
+
+    color("brown")
+    translate([1,50,120])
+    linear_extrude(height=3)
+    import("StoryTelling.dxf");
+}
+
 
 
 black_bground();
-TOTAL = 15;
+TOTAL = 9;
 time = $t*TOTAL;
 
 function within_range(t, start, end) = t > start && t < end;
 function time_range(t, start, end) = (t-start)/(end-start);
 
-if(within_range(time, 0, 3))
-    ed_banger_scene(time_range(time, 0, 3));
+if (within_range(time, 0, 2))
+    story_telling_1_scene(time_range(time, 0, 2));
 
-if(within_range(time, 3, 5))
-    justice_scene(time_range(time, 3, 5));
+if (within_range(time, 2, 3))
+    story_telling_2_scene(time_range(time, 2, 3));
 
-if(within_range(time, 5, 10))
-    DVNO_intro_logo_scene(time_range(time, 5, 10));
+if (within_range(time, 3, 6))
+    story_telling_3_scene(time_range(time, 3, 6));
 
-if(within_range(time, 10, 15))
-    printed_in_gold_scene(time_range(time, 10, 15));
+if (within_range(time, 6, 9))
+    story_telling_4_scene(time_range(time, 6, 9));
+
+//if(within_range(time, 0, 3))
+//    ed_banger_scene(time_range(time, 0, 3));
+
+//if(within_range(time, 3, 5))
+//    justice_scene(time_range(time, 3, 5));
+
+//if(within_range(time, 5, 10))
+//    DVNO_intro_logo_scene(time_range(time, 5, 10));
+
+//if(within_range(time, 10, 15))
+//    printed_in_gold_scene(time_range(time, 10, 15));
 
 //if(within_range(time, 0, 15))
 //    DVNO_globe_ending_scene(time_range(time, 0, 15));
