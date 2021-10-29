@@ -75,12 +75,13 @@ module DVNO_intro_logo_scene(t){
     T1=1.0; //aproximacao lenta
     TR=0.7;
     seed = 0;
-    x=rands(-300,300,29,seed);
-    y=rands(-300,300,29,seed);
+    num_parts = 29;
+    x=rands(-300,300,num_parts+1,seed);
+    y=rands(-300,300,num_parts+1,seed);
     function layer_zoom(part, t) = t < T1 ? (1-t/T1)*1000 : 0;
     function logo_opacity(t) = t < TR ? 1 : 1-((t-TR)/(1-TR));
     color([0.3, 0.2, 1, logo_opacity(t)])
-    for(part=[1:29])
+    for(part=[1:num_parts])
     translate([0,0, 40+layer_zoom(part, t)])
         rotate([(0.7-t)*x[part],(0.7-t)*y[part]])
         linear_extrude(height=6)
@@ -256,38 +257,41 @@ module story_telling_4_scene(t){
     import("StoryTelling.dxf");
 }
 
+module story_telling_scene(t){
+//    if (within_range(t, 0, 2/9))
+//        story_telling_1_scene(time_range(t, 0, 2/9));
 
+    if (within_range(t, 2/9, 3/9))
+        story_telling_2_scene(time_range(t, 2/9, 3/9));
+
+    if (within_range(t, 3/9, 6/9))
+        story_telling_3_scene(time_range(t, 3/9, 6/9));
+
+    if (within_range(t, 6/9, 9/9))
+        story_telling_4_scene(time_range(t, 6/9, 9/9));
+}
 
 black_bground();
-TOTAL = 9;
+TOTAL = 22;
 time = $t*TOTAL;
 
 function within_range(t, start, end) = t > start && t < end;
 function time_range(t, start, end) = (t-start)/(end-start);
 
-if (within_range(time, 0, 2))
-    story_telling_1_scene(time_range(time, 0, 2));
+if(within_range(time, 0, 3))
+    ed_banger_scene(time_range(time, 0, 3));
 
-if (within_range(time, 2, 3))
-    story_telling_2_scene(time_range(time, 2, 3));
+if(within_range(time, 3, 5))
+    justice_scene(time_range(time, 3, 5));
 
-if (within_range(time, 3, 6))
-    story_telling_3_scene(time_range(time, 3, 6));
+if(within_range(time, 5, 10))
+    DVNO_intro_logo_scene(time_range(time, 5, 10));
 
-if (within_range(time, 6, 9))
-    story_telling_4_scene(time_range(time, 6, 9));
+if(within_range(time, 10, 15))
+    printed_in_gold_scene(time_range(time, 10, 15));
 
-//if(within_range(time, 0, 3))
-//    ed_banger_scene(time_range(time, 0, 3));
+if (within_range(time, 15, 18))
+    story_telling_scene(time_range(time, 0, 22));
 
-//if(within_range(time, 3, 5))
-//    justice_scene(time_range(time, 3, 5));
-
-//if(within_range(time, 5, 10))
-//    DVNO_intro_logo_scene(time_range(time, 5, 10));
-
-//if(within_range(time, 10, 15))
-//    printed_in_gold_scene(time_range(time, 10, 15));
-
-//if(within_range(time, 0, 15))
-//    DVNO_globe_ending_scene(time_range(time, 0, 15));
+if(within_range(time, 18, 22))
+    DVNO_globe_ending_scene(time_range(time, 18, 22));
