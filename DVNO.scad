@@ -1,12 +1,28 @@
 /*
-This is a reimplementation of the DVNO videoclip (by Justice) using the OpenSCAD modeling language.
-Even if the original video copyrights are owned by someone else, the code of this reimplementation is written by myself,
-Felipe Correa da Silva Sanches, and I make it available to the public domain, so anyone can do anything with it. Have fun!
+This is a reimplementation of the DVNO videoclip
+(by Justice) using the OpenSCAD modeling language.
+Even if the original video copyrights are
+owned by someone else, the code of this
+reimplementation is written by myself,
+Felipe Correa da Silva Sanches, and I make it
+available to the public domain, so anyone can do
+anything with it. Have fun!
 
     Happy Hacking,
     Felipe "Juca" Sanches
     <juca@members.fsf.org>
     April 14th, 2018
+
+How to view this:
+
+* Install OpenSCAD
+* Load the DVNO.scad file
+* Click on the menu option View->Animate...
+* Set FPS: 30
+* Set Steps to a multiple of 30 (depending on how many seconds you want the animation to take)
+* The total length of the animation depends on whether we're viewing just one scene for the purpose of debugging, or the entire video clip. Take a look a the very last lines in this file to setup the scene sequencing.
+* Feel free to navigate the 3D space while the animation is playing.
+* Or you may prefer to view it just like in the original by turning off grid view and by clicking on View->Top
 */
 
 BACKGROUND_COLOR = [0.1, 0.1, 0.1];
