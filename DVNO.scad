@@ -257,26 +257,26 @@ module story_telling_4_scene(t){
     import("StoryTelling.dxf");
 }
 
+function within_range(t, start, end) = t > start && t < end;
+function time_range(t, start, end) = (t-start)/(end-start);
+
 module story_telling_scene(t){
-//    if (within_range(t, 0, 2/9))
-//        story_telling_1_scene(time_range(t, 0, 2/9));
+    if (within_range(t, 0, 0.3))
+        story_telling_1_scene(time_range(t, 0, 0.3));
 
-    if (within_range(t, 2/9, 3/9))
-        story_telling_2_scene(time_range(t, 2/9, 3/9));
+    if (within_range(t, 0.3, 0.5))
+        story_telling_2_scene(time_range(t, 0.3, 0.5));
 
-    if (within_range(t, 3/9, 6/9))
-        story_telling_3_scene(time_range(t, 3/9, 6/9));
+    if (within_range(t, 0.5, 0.7))
+        story_telling_3_scene(time_range(t, 0.5, 0.7));
 
-    if (within_range(t, 6/9, 9/9))
-        story_telling_4_scene(time_range(t, 6/9, 9/9));
+    if (within_range(t, 0.7, 1))
+        story_telling_4_scene(time_range(t, 0.7, 1));
 }
 
 black_bground();
 TOTAL = 22;
 time = $t*TOTAL;
-
-function within_range(t, start, end) = t > start && t < end;
-function time_range(t, start, end) = (t-start)/(end-start);
 
 if(within_range(time, 0, 3))
     ed_banger_scene(time_range(time, 0, 3));
@@ -291,7 +291,7 @@ if(within_range(time, 10, 15))
     printed_in_gold_scene(time_range(time, 10, 15));
 
 if (within_range(time, 15, 18))
-    story_telling_scene(time_range(time, 0, 22));
+    story_telling_scene(time_range(time, 15, 18));
 
 if(within_range(time, 18, 22))
     DVNO_globe_ending_scene(time_range(time, 18, 22));
